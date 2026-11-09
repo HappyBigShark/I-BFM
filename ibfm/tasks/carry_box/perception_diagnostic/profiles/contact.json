@@ -1,0 +1,6 @@
+{
+  "description": "Load-based contact estimate: 60 ms delay, 5% false negatives, 2% false positives per tick.",
+  "contact_delay_steps": 3,
+  "contact_false_negative_prob": 0.05,
+  "contact_false_positive_prob": 0.02
+}

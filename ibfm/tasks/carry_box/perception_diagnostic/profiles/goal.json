@@ -1,0 +1,5 @@
+{
+  "description": "Goal localisation: 5 cm bias plus 2 cm/sqrt(s) odometry drift.",
+  "goal_bias_std_m": 0.05,
+  "goal_drift_std_m_per_sqrt_s": 0.02
+}

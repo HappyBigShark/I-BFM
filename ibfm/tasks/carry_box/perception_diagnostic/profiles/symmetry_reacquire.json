@@ -1,0 +1,8 @@
+{
+  "description": "Cube symmetry: occlusion dropouts; a gap > 0.3 s re-detects the box with a random equivalent frame.",
+  "symmetry_group": "cube24",
+  "symmetry_initial": "random",
+  "reacquire_after_s": 0.3,
+  "occlusion_radius_m": 0.45,
+  "occlusion_dropout_prob": 0.95
+}

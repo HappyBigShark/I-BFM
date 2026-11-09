@@ -1,0 +1,9 @@
+{
+  "description": "Pessimistic monocular-depth fit: 4 cm white + 2 cm/m^2 depth growth, 4 cm correlated (0.5 s), 10 deg, 8% depth-scale bias.",
+  "pos_noise_std_m": 0.04,
+  "pos_noise_per_m2": 0.02,
+  "rot_noise_std_deg": 10.0,
+  "depth_scale_bias_std": 0.08,
+  "pos_correlated_std_m": 0.04,
+  "pos_correlated_tau_s": 0.5
+}

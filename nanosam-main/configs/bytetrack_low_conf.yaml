@@ -1,0 +1,10 @@
+# ByteTrack settings tuned for low-confidence YOLO-World open-vocabulary boxes.
+tracker_type: bytetrack
+track_high_thresh: 0.005
+track_low_thresh: 0.001
+new_track_thresh: 0.005
+track_buffer: 30
+match_thresh: 0.8
+# Open-vocabulary confidences here are ~0.005-0.04; score fusion would make
+# even geometrically identical boxes fail ByteTrack's distance threshold.
+fuse_score: false

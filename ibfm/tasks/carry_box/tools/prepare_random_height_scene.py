@@ -22,9 +22,12 @@ HERE = Path(__file__).resolve().parent
 BUNDLE = HERE.parent
 REPO = BUNDLE.parents[1]
 def main() -> None:
-    output = BUNDLE / "random_height_scene"
+    output = Path(os.environ.get("SCENE_OUTPUT_DIR") or BUNDLE / "random_height_scene")
     output.mkdir(parents=True, exist_ok=True)
-    box_size = 0.30
+    # Full box dimensions in the box geom frame (m); the default is the 0.30 m cube.
+    box_size_xyz = np.asarray([float(value) for value in os.environ.get("BOX_SIZE", "0.30 0.30 0.30").split()])
+    if box_size_xyz.shape != (3,) or not np.all(box_size_xyz > 0.0):
+        raise ValueError("BOX_SIZE must hold three positive full dimensions in metres")
     initial_z = 0.65
     target_z = float(os.environ.get("TARGET_HEIGHT", "0.65"))
     if not 0.15 <= target_z <= 0.80:
@@ -40,6 +43,14 @@ def main() -> None:
     robot_xy = np.asarray([1.0, 0.0]) + robot_distance * np.asarray(
         [math.cos(robot_bearing), math.sin(robot_bearing)]
     )
+    heading_error_max = os.environ.get("ROBOT_HEADING_ERROR_MAX_DEG")
+    if heading_error_max is None:
+        robot_heading = float(rng.uniform(-math.pi, math.pi))
+    else:
+        # Face the box up to the given error, so the box starts in the camera view.
+        error = math.radians(float(heading_error_max))
+        robot_heading = robot_bearing + math.pi + float(rng.uniform(-error, error))
+        robot_heading = math.atan2(math.sin(robot_heading), math.cos(robot_heading))
     sample = {
         "episode_id": 0,
         "box_x": 1.0,
@@ -50,8 +61,8 @@ def main() -> None:
         "target_z": target_z,
         "robot_x": float(robot_xy[0]),
         "robot_y": float(robot_xy[1]),
-        "robot_heading_rad": float(rng.uniform(-math.pi, math.pi)),
-        "box_size_m": box_size,
+        "robot_heading_rad": robot_heading,
+        "box_size_m": box_size_xyz.tolist(),
         "box_mass_kg": 0.70,
         "initial_robot_box_distance": robot_distance,
         "initial_box_target_error_3d": float(
@@ -85,7 +96,6 @@ def main() -> None:
     prepared_motion = joblib.load(motion_path)
     next(iter(prepared_motion.values()))["object_quat"][:] = quaternion
     joblib.dump(prepared_motion, motion_path)
-    box_size_xyz = np.full(3, box_size, dtype=np.float64)
     initial_top = platform_top_for_box_center(
         initial_z, box_size_xyz, quaternion, box_config
     )

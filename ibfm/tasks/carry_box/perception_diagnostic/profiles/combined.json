@@ -1,0 +1,31 @@
+{
+  "description": "Full estimated loop: medium pose noise + timing + visibility + contact + base state + goal (symmetry tested separately).",
+  "pos_noise_std_m": 0.02,
+  "pos_noise_per_m2": 0.01,
+  "rot_noise_std_deg": 5.0,
+  "depth_scale_bias_std": 0.03,
+  "rate_hz": 15.0,
+  "latency_s": 0.08,
+  "velocity_mode": "finite_difference",
+  "velocity_filter_alpha": 0.5,
+  "extrapolate": true,
+  "dropout_prob": 0.1,
+  "fov_deg": [
+    87.0,
+    58.0
+  ],
+  "occlusion_radius_m": 0.45,
+  "occlusion_dropout_prob": 0.8,
+  "contact_delay_steps": 3,
+  "contact_false_negative_prob": 0.05,
+  "contact_false_positive_prob": 0.02,
+  "root_height_bias_std_m": 0.02,
+  "root_height_noise_std_m": 0.01,
+  "root_height_drift_std_m_per_sqrt_s": 0.01,
+  "base_vel_bias_std_mps": 0.05,
+  "base_vel_noise_std_mps": 0.1,
+  "goal_bias_std_m": 0.05,
+  "goal_drift_std_m_per_sqrt_s": 0.02,
+  "pos_correlated_std_m": 0.02,
+  "pos_correlated_tau_s": 0.5
+}

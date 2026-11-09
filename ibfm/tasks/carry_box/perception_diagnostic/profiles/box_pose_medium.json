@@ -1,0 +1,9 @@
+{
+  "description": "Box pose noise of a mask+depth cuboid fit: 2 cm white + 1 cm/m^2 depth growth, 2 cm correlated (0.5 s), 5 deg, 3% depth-scale bias.",
+  "pos_noise_std_m": 0.02,
+  "pos_noise_per_m2": 0.01,
+  "rot_noise_std_deg": 5.0,
+  "depth_scale_bias_std": 0.03,
+  "pos_correlated_std_m": 0.02,
+  "pos_correlated_tau_s": 0.5
+}

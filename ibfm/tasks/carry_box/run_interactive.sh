@@ -3,9 +3,9 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/../.." && pwd)"
-scene_dir="${script_dir}/random_height_scene"
+scene_dir="${SCENE_DIR:-${script_dir}/random_height_scene}"
 record_tag="${RECORD_TAG:-$(date +%Y%m%d_%H%M%S)}"
-output_dir="${script_dir}/interactive/random_height_${record_tag}"
+output_dir="${OUTPUT_DIR:-${script_dir}/interactive/random_height_${record_tag}}"
 mkdir -p "${output_dir}"
 viewer_args=(
   --viewer --max-steps 0 --save-mp4
@@ -15,17 +15,28 @@ viewer_args=(
 )
 if [[ "${HEADLESS:-0}" == "1" ]]; then
   viewer_args=(--no-viewer --max-steps "${MAX_STEPS:-100}")
+  if [[ "${VIDEO:-0}" == "1" ]]; then
+    viewer_args+=(--save-mp4 --render-size "${RENDER_SIZE:-720}" --video-fps "${VIDEO_FPS:-30}"
+      --output-path "${output_dir}/session.mp4")
+  fi
 fi
 
 cd "${repo_root}"
+if [[ "${PREPARE_SCENE:-1}" == "1" ]]; then
+SCENE_OUTPUT_DIR="${scene_dir}" \
 TARGET_HEIGHT="${TARGET_HEIGHT:-0.65}" \
 ROBOT_BOX_DISTANCE_MIN="${ROBOT_BOX_DISTANCE_MIN:-1.5}" \
 ROBOT_BOX_DISTANCE_MAX="${ROBOT_BOX_DISTANCE_MAX:-2.0}" \
 SCENE_SEED="${SCENE_SEED:-166559744}" \
 PYTHONPATH="${repo_root}:${PYTHONPATH:-}" \
   .venv/bin/python "${script_dir}/tools/prepare_random_height_scene.py"
+fi
 
 initial_distance="$(.venv/bin/python -c 'import json, sys; print(json.load(open(sys.argv[1]))["initial_robot_box_distance"])' "${scene_dir}/scene.json")"
+# Box dimensions come from the scene (older scenes store one cube edge).
+box_size="$(.venv/bin/python -c 'import json, sys; v = json.load(open(sys.argv[1]))["box_size_m"]; print(*(v if isinstance(v, list) else [v] * 3))' "${scene_dir}/scene.json")"
+# The random start height must keep the box above the floor.
+height_min_default="$(.venv/bin/python -c 'import sys; print(max(0.15, float(sys.argv[3]) / 2.0))' ${box_size})"
 
 CUDA_VISIBLE_DEVICES="${GPU_ID:-}" \
 DISPLAY="${DISPLAY:-:1}" \
@@ -35,7 +46,7 @@ XDG_CACHE_HOME=/tmp/ufo-cache-solve-close166-height-reset \
 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 PYTHONPATH="${script_dir}/../common/code_overlay:${repo_root}:${PYTHONPATH:-}" \
 UFO_Z3D_RANDOM_HEIGHT_RESET=1 \
-UFO_Z3D_RESET_HEIGHT_MIN="${HEIGHT_MIN:-0.15}" \
+UFO_Z3D_RESET_HEIGHT_MIN="${HEIGHT_MIN:-${height_min_default}}" \
 UFO_Z3D_RESET_HEIGHT_MAX="${HEIGHT_MAX:-0.80}" \
 UFO_Z3D_RESET_SEED="${HEIGHT_SEED:-166559744}" \
 UFO_Z3D_RESET_SUCCESS_RADIUS=0.20 \
@@ -63,7 +74,7 @@ UFO_PIVOT_MAX_SECONDS=5.0 UFO_PIVOT_COOLDOWN_SECONDS=0.50 \
 UFO_PIVOT_STALL_WINDOW_SECONDS=0.50 UFO_PIVOT_MIN_RECENT_YAW_RAD=0.03 \
 UFO_PIVOT_MIN_BEARING_IMPROVEMENT_DEG=3.0 \
 UFO_PIVOT_MAX_HEIGHT_DRIFT_M=0.08 UFO_PIVOT_MIN_BOX_UPRIGHT=0.85 \
-.venv/bin/python "${script_dir}/z_aware_height_banded_sim2sim.py" \
+.venv/bin/python "${SIM2SIM_ENTRY:-${script_dir}/z_aware_height_banded_sim2sim.py}" \
   --model-folder "${script_dir}/checkpoint_ref" \
   --latent-dir "${script_dir}/latents" \
   --get-up-latent "${script_dir}/latents/z_get_up_reward.pkl" \
@@ -73,7 +84,7 @@ UFO_PIVOT_MAX_HEIGHT_DRIFT_M=0.08 UFO_PIVOT_MIN_BOX_UPRIGHT=0.85 \
   --goal-offset-x 1.5 --goal-offset-y 0.0 \
   --robot-config "${scene_dir}/robot_config.yaml" \
   --box-config "${scene_dir}/box_config.yaml" \
-  --box-size 0.30 0.30 0.30 --box-mass 0.70 \
+  --box-size ${box_size} --box-mass 0.70 \
   --box-condim 3 --hand-friction 1.0 0.005 0.0001 \
   --contact-source physical --device cpu \
   --fall-detect-steps 10 --get-up-root-height 0.65 \

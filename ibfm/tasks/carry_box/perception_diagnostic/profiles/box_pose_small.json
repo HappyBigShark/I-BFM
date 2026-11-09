@@ -1,0 +1,5 @@
+{
+  "description": "Box pose noise inside the training mocap randomisation (1 cm std, 2 deg; training used 2 cm / 2 deg).",
+  "pos_noise_std_m": 0.01,
+  "rot_noise_std_deg": 2.0
+}

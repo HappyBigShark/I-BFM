@@ -1,0 +1,8 @@
+{
+  "description": "15 Hz perception, 80 ms latency, finite-difference velocity, constant-velocity extrapolation.",
+  "rate_hz": 15.0,
+  "latency_s": 0.08,
+  "velocity_mode": "finite_difference",
+  "velocity_filter_alpha": 0.5,
+  "extrapolate": true
+}

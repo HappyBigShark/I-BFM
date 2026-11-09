@@ -1,0 +1,6 @@
+{
+  "description": "Cube symmetry: true frame at detection, 2% chance per measurement of jumping to another equivalent frame.",
+  "symmetry_group": "cube24",
+  "symmetry_jump_prob": 0.02,
+  "reacquire_after_s": 1000000000.0
+}

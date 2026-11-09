@@ -35,6 +35,7 @@ from humanoidverse.envs.carry_observations import (
     compute_hand_spatial_observation,
 )
 from humanoidverse.envs.motion_observations import compute_humanoid_observations_max
+from humanoidverse.envs.rgbd_camera import RgbdCameraConfig, add_rgbd_camera
 from humanoidverse.utils.robot_spec import load_robot_training_spec
 from humanoidverse.utils.torch_utils import quat_rotate_inverse
 
@@ -110,6 +111,7 @@ def _build_model(
     render_size: int,
     show_goal_marker: bool = False,
     goal_marker_radius: float = 0.20,
+    rgbd_camera: RgbdCameraConfig | None = None,
 ) -> mujoco.MjModel:
     half_size = np.asarray(box_cfg["half_size"], dtype=np.float64)
     volume = float(8.0 * np.prod(half_size))
@@ -164,6 +166,8 @@ def _build_model(
         ambient=(0.35, 0.35, 0.35),
         specular=(0.1, 0.1, 0.1),
     )
+    if rgbd_camera is not None:
+        add_rgbd_camera(spec, rgbd_camera)
     model = spec.compile()
     model.vis.global_.offwidth = max(int(model.vis.global_.offwidth), int(render_size))
     model.vis.global_.offheight = max(int(model.vis.global_.offheight), int(render_size))

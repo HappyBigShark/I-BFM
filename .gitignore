@@ -12,3 +12,12 @@
 /ibfm/humanoidverse/data/*.pkl
 /checkpoints/ibfm-166m/model/model.safetensors
 *.tmp
+/ibfm/tasks/carry_box/perception_diagnostic/results/*/scenes/
+
+# Model weights stay local and are not published.
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+.aws

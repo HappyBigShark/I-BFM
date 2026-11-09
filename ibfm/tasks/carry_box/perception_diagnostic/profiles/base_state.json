@@ -1,0 +1,8 @@
+{
+  "description": "Legged state estimator: 2 cm root-height bias, 1 cm noise, 1 cm/sqrt(s) drift; 5 cm/s velocity bias, 10 cm/s noise.",
+  "root_height_bias_std_m": 0.02,
+  "root_height_noise_std_m": 0.01,
+  "root_height_drift_std_m_per_sqrt_s": 0.01,
+  "base_vel_bias_std_mps": 0.05,
+  "base_vel_noise_std_mps": 0.1
+}
