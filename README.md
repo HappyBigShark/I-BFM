@@ -1,3 +1,13 @@
+<p align="center">
+  <a href="assets/real-robot/g1-carry-box.mp4">
+    <img src="assets/real-robot/g1-carry-box.gif" alt="G1 真机搬箱" width="820">
+  </a>
+</p>
+
+<p align="center">
+  <a href="assets/real-robot/g1-carry-box.mp4">播放原视频</a>
+</p>
+
 # I-BFM
 
 同一份策略用于搬箱、推箱和踢箱。本仓库是训练和交互代码，不包含模型权重。

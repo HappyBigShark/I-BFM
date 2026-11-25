@@ -1,3 +1,13 @@
+<p align="center">
+  <a href="assets/real-robot/g1-carry-box.mp4">
+    <img src="assets/real-robot/g1-carry-box.gif" alt="G1 carrying a box" width="820">
+  </a>
+</p>
+
+<p align="center">
+  <a href="assets/real-robot/g1-carry-box.mp4">Play the original video</a>
+</p>
+
 # I-BFM
 
 One policy for carrying, pushing, and kicking a box. This repository is the training and interaction code. Model weights are not included.
